@@ -4,16 +4,18 @@ from functools import reduce
 
 class Scheduler():
     def __init__(self, _no_of_companies, _companies, _time_slots_companies, _panel_no_companies, _slots_companies) -> None:
-        self.no_of_companies = _no_of_companies                        #for ex. 3
-        self.companies = _companies                                    #for ex. Qualcomm
-        self.time_slots_companies = _time_slots_companies              #starting times
+        self.no_of_companies = _no_of_companies
+        self.companies = _companies
+        self.time_slots_companies = _time_slots_companies
         self.panel_no_companies = _panel_no_companies
         self.slots_companies = _slots_companies
         self.companies_df = []
         self.possible_combinations = []
     def read_data(self):
         for company in self.companies:
-            self.companies_df.append(pd.read_csv(f"{company}.csv"))                 #companies_df is a list with no_of_companies number of elements
+            self.companies_df.append(pd.read_csv(f"{company}.csv"))
+    def get_companiesdf(self):
+        return self.companies_df
     def change_column_name(self):
         i = 0
         for company_df in self.companies_df:
@@ -94,12 +96,16 @@ class Scheduler():
             self.df_final.loc[self.df_final[f'{self.companies[itr]}_Status'] == 1, f'{self.companies[itr]}_Status'] = 'Shortlisted'
     def change_ts(self):
         times = ['9:00-9:45', '9:45-10:30', '10:30-11:15', '11:15-12:00', '12:00-12:45', '12:45-1:30', '1:30-2:15', '2:15-3:00']
-
-        for k in range(0,self.no_of_companies):
-            #(x,y) = (self.time_slots_companies[k], self.panel_no_companies[k])
-            x = self.time_slots_companies[k]
-            for i in range(x, x+self.slots_companies[k]):
-                self.df_final.loc[self.df_final[f'{self.companies[k]}_ts'] == i, f'{self.companies[k]}_ts'] = times[i]
+        df = self.df_final
+        for index, row in df.iterrows():
+            for company in self.companies:
+                if row[f'{company}_Status'] == 'Shortlisted':
+                    itr_float = row[f'{company}_ts']
+                    itr = np.int16(itr_float).item()
+                    # itr = df.at[index,f'{company}_ts']
+                    # print(itr)
+                    df.loc[index, f'{company}_ts'] = times[itr]
+        self.df_final= df
     def change_na(self):
         def convert_na(val):
             if val==0:
@@ -126,6 +132,9 @@ class Scheduler():
         self.change_na()
         df = self.get_df()
         return df
-    
+    def get_csv(self):
+        df = self.get_df
+        csv_file =  df.to_csv('final_ET_schedule.csv')
+        return csv_file
 
 
