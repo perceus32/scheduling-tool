@@ -4,16 +4,16 @@ from functools import reduce
 
 class Scheduler():
     def __init__(self, _no_of_companies, _companies, _time_slots_companies, _panel_no_companies, _slots_companies) -> None:
-        self.no_of_companies = _no_of_companies
-        self.companies = _companies
-        self.time_slots_companies = _time_slots_companies
+        self.no_of_companies = _no_of_companies                        #for ex. 3
+        self.companies = _companies                                    #for ex. Qualcomm
+        self.time_slots_companies = _time_slots_companies              #starting times
         self.panel_no_companies = _panel_no_companies
         self.slots_companies = _slots_companies
         self.companies_df = []
         self.possible_combinations = []
     def read_data(self):
         for company in self.companies:
-            self.companies_df.append(pd.read_csv(f"{company}.csv"))
+            self.companies_df.append(pd.read_csv(f"{company}.csv"))                 #companies_df is a list with no_of_companies number of elements
     def change_column_name(self):
         i = 0
         for company_df in self.companies_df:
@@ -96,10 +96,10 @@ class Scheduler():
         times = ['9:00-9:45', '9:45-10:30', '10:30-11:15', '11:15-12:00', '12:00-12:45', '12:45-1:30', '1:30-2:15', '2:15-3:00']
 
         for k in range(0,self.no_of_companies):
-            (x,y) = (self.time_slots_companies[k], self.panel_no_companies[k])
+            #(x,y) = (self.time_slots_companies[k], self.panel_no_companies[k])
+            x = self.time_slots_companies[k]
             for i in range(x, x+self.slots_companies[k]):
-                for itr in range(0,len(self.companies)):
-                    self.df_final.loc[self.df_final[f'{self.companies[itr]}_ts'] == i, f'{self.companies[itr]}_ts'] = times[i]
+                self.df_final.loc[self.df_final[f'{self.companies[k]}_ts'] == i, f'{self.companies[k]}_ts'] = times[i]
     def change_na(self):
         def convert_na(val):
             if val==0:
