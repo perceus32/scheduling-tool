@@ -14,7 +14,7 @@ timeslots = {
 } #8 timeslots
 '''
 
-time_slots_companies = [0,0,0] ## Starting time period of companies
+time_slots_companies = [1,0,2] ## Starting time period of companies
 panel_no_companies = [17, 10, 10] ## No of panels of companies
 slots_companies = [8,8,8] ## Slots per company
 no_of_companies = 3 ##Number of companies

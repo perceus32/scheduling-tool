@@ -95,6 +95,7 @@ class Scheduler():
         for itr in range(0,len(self.companies)): 
             self.df_final.loc[self.df_final[f'{self.companies[itr]}_Status'] == 1, f'{self.companies[itr]}_Status'] = 'Shortlisted'
     def change_ts(self):
+        '''
         times = ['9:00-9:45', '9:45-10:30', '10:30-11:15', '11:15-12:00', '12:00-12:45', '12:45-1:30', '1:30-2:15', '2:15-3:00']
         df = self.df_final
         for index, row in df.iterrows():
@@ -106,6 +107,14 @@ class Scheduler():
                     # print(itr)
                     df.loc[index, f'{company}_ts'] = times[itr]
         self.df_final= df
+        '''        
+        times = ['9:00-9:45', '9:45-10:30', '10:30-11:15', '11:15-12:00', '12:00-12:45', '12:45-1:30', '1:30-2:15', '2:15-3:00']
+        for k in range(0,self.no_of_companies):
+            #(x,y) = (self.time_slots_companies[k], self.panel_no_companies[k])
+            #x = self.time_slots_companies[k]
+            for i in range(0, self.slots_companies[k]):
+                self.df_final.loc[self.df_final[f'{self.companies[k]}_ts'] == i, f'{self.companies[k]}_ts'] = times[i]
+                
     def change_na(self):
         def convert_na(val):
             if val==0:
